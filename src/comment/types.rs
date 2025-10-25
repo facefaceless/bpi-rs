@@ -72,8 +72,11 @@ pub struct Member {
     pub nameplate: Nameplate,            // 勋章信息
     pub official_verify: OfficialVerify, // 认证信息
     pub vip: Vip,                        // 大会员信息
+    #[serde(default)]
     pub user_sailing: serde_json::Value, // 评论条目装饰信息
+    #[serde(default)]
     pub is_contractor: bool,             // 是否合作用户
+    #[serde(default)]
     pub contract_desc: String,           // 合作用户说明
 
     pub rank: Option<String>,
