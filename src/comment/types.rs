@@ -35,7 +35,7 @@ pub struct Comment {
 
     pub floor: Option<u64>,
     pub show_follow: Option<bool>,
-    pub card_label: Option<CardLabel>,
+    pub card_label: Option<Vec<CardLabel>>,
     pub rpid_str: Option<String>,
     pub root_str: Option<String>,
     pub parent_str: Option<String>,
@@ -72,8 +72,11 @@ pub struct Member {
     pub nameplate: Nameplate,            // 勋章信息
     pub official_verify: OfficialVerify, // 认证信息
     pub vip: Vip,                        // 大会员信息
+    #[serde(default)]
     pub user_sailing: serde_json::Value, // 评论条目装饰信息
+    #[serde(default)]
     pub is_contractor: bool,             // 是否合作用户
+    #[serde(default)]
     pub contract_desc: String,           // 合作用户说明
 
     pub rank: Option<String>,
@@ -205,7 +208,7 @@ pub struct Picture {
     pub img_src: String,
     pub img_width: u64,
     pub img_height: u64,
-    pub img_size: u64, // KB
+    pub img_size: f64, // KB
 }
 
 /// 折叠信息
@@ -233,7 +236,7 @@ pub struct CardLabel {
     pub label_color_day: String,
     pub label_color_night: String,
     pub image: Option<String>,
-    pub r#type: Option<String>,
+    pub r#type: Option<u64>,
     pub background: Option<String>,
     pub background_width: Option<u64>,
     pub background_height: Option<u64>,
@@ -284,7 +287,7 @@ pub struct Cursor {
 /// 评论区顶部信息
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Upper {
-    pub mid: u32,
+    pub mid: u64, // UP 主 mid
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
