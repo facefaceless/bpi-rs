@@ -32,8 +32,8 @@ pub struct DetailItem {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Fallback {
-    id: String,
-    r#type: i32,
+    pub id: String,
+    pub r#type: i32,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -46,7 +46,7 @@ pub struct ItemBasic {
     pub like_icon: BasicLikeIcon,
     /// 关联 id 字符串
     pub rid_str: String,
-    /// 图文标题  
+    /// 图文标题
     pub title: String,
     /// 作者 mid (UID)
     pub uid: u64,
