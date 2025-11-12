@@ -86,6 +86,26 @@ impl BpiClient {
         })
     }
 
+    /// 创建非全局的client
+    pub fn new_local() -> Self {
+        let jar = Arc::new(Jar::default());
+        let client = Client::builder()
+            .timeout(std::time::Duration::from_secs(10))
+            .gzip(true) // 启用gzip自动解压缩
+            .deflate(true) // 启用deflate解压缩
+            .brotli(true) // 启用brotli解压缩
+            .no_proxy()
+            .cookie_provider(jar.clone())
+            .pool_max_idle_per_host(0)
+            .build()
+            .unwrap();
+        BpiClient {
+            client,
+            jar,
+            account: Mutex::new(None),
+        }
+    }
+
     /// 设置账号信息
     pub fn set_account(&self, account: Account) {
         if account.is_complete() {
