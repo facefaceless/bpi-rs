@@ -1,6 +1,7 @@
 use serde::{ Deserialize, Serialize };
 use std::collections::{ BTreeMap, HashMap };
-use std::sync::{ RwLock, LazyLock };
+use std::sync::LazyLock;
+use tokio::sync::RwLock;
 use chrono::Local;
 
 use crate::models::WbiData;
@@ -121,7 +122,7 @@ impl BpiClient {
 
         // 先尝试从缓存读取
         let (img_key, sub_key) = {
-            let map = WBI_KEY_MAP.read().unwrap();
+            let map = WBI_KEY_MAP.read().await;
             if let (Some(img), Some(sub)) = (map.get(&img_key_key), map.get(&sub_key_key)) {
                 (img.clone(), sub.clone())
             } else {
@@ -153,7 +154,7 @@ impl BpiClient {
                     .to_string();
 
                 // 插入缓存
-                let mut map = WBI_KEY_MAP.write().unwrap();
+                let mut map = WBI_KEY_MAP.write().await;
                 map.insert(img_key_key.clone(), img.clone());
                 map.insert(sub_key_key.clone(), sub.clone());
 
