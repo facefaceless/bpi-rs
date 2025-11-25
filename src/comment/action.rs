@@ -18,24 +18,38 @@ pub enum CommentType {
 /// 举报原因枚举
 #[derive(Debug, Clone, Copy, Serialize)]
 pub enum ReportReason {
+    /// 其他
     Other = 0,
+    /// 垃圾广告
     Ad = 1,
+    /// 色情低俗
     Porn = 2,
+    /// 刷屏
     Spam = 3,
+    /// 引战（引战、不友善言论）
     Flame = 4,
+    /// 剧透
     Spoiler = 5,
     Politics = 6,
+    /// 人身攻击
     Abuse = 7,
+    /// 视频不相关
     Irrelevant = 8,
+    /// 违法违规（涉政敏感）
     Illegal = 9,
+    /// 低俗
     Vulgar = 10,
     Phishing = 11,
     Scam = 12,
     Rumor = 13,
     Incitement = 14,
+    /// 侵犯隐私（传播他人隐私信息）
     Privacy = 15,
     FloorSnatching = 16,
+    /// 青少年不良信息（涉未成年人不良信息）
     HarmfulToYouth = 17,
+    /// 虚假不实信息（传播谣言）
+    FalseInfo = 22,
 }
 
 /// 评论成功返回数据
