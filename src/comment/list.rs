@@ -77,6 +77,46 @@ pub struct CountData {
 }
 
 impl BpiClient {
+    /// 获取评论区明细（懒加载）
+    ///
+    /// 注: Wbi 签名错误时返回 -403 而非 -352
+    ///
+    /// # 参数（省略版）
+    /// | 参数名 | 类型 | 内容          | 必要性 | 备注 |
+    /// | ------ |-----|------         |-------|------|
+    /// | `type` | num | 评论区类型代码 | 必要   |     |
+    /// | `oid`  | num | 目标评论区 id  | 必要   |     |
+    /// | `mode` | num | 排序方式       | 非必要 | 默认为 3<br />0 3：仅按热度<br />1：按热度+按时间<br />2：仅按时|
+    /// | `pagination_str`|str| 分页信息| 非必要 | 对应参数`next_offset`，是如果获取第一页则为空，否则需要是上一次调用时的返回值 |
+    /// | `plat` | num | 平台类型       | 非必要 | 如 `1` |
+    /// | `web_location` |num| 1315875 | 非必要  |    |
+    pub async fn comment_list_lazy(
+        &self,
+        r#type: i32,
+        oid: u64,
+        mode: Option<u32>,
+        next_offset: Option<&str>,
+        plat: Option<u32>,
+        web_location: Option<i32>,
+    ) -> Result<CommentListResponse, BpiError> {
+        let params = vec![
+            ("type", r#type.to_string()),
+            ("oid", oid.to_string()),
+            ("mode", mode.unwrap_or(3).to_string()),
+            (
+                "pagination_str",
+                format!("{{\"offset\":\"{}\"}}", next_offset.unwrap_or("")),
+            ),
+            ("plat", plat.unwrap_or(1).to_string()),
+            ("web_location", web_location.unwrap_or(1315875).to_string()),
+        ];
+        let signed_params = self.get_wbi_sign2(params).await?;
+        self.get("https://api.bilibili.com/x/v2/reply/wbi/main")
+            .query(&signed_params)
+            .send_bpi("获取评论区明细（懒加载）")
+            .await
+    }
+
     /// 获取评论主列表
     ///
     /// 获取指定评论区的评论列表，支持分页和排序。
