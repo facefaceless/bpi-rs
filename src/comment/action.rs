@@ -261,7 +261,7 @@ impl BpiClient {
     /// [举报评论](https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/comment/action.md#举报评论)
     pub async fn comment_report(
         &self,
-        r#type: CommentType,
+        r#type: i32,
         oid: u64,
         rpid: u64,
         reason: ReportReason,
@@ -269,7 +269,7 @@ impl BpiClient {
     ) -> Result<BpiResponse<serde_json::Value>, BpiError> {
         let csrf = self.csrf()?;
         let mut params = vec![
-            ("type", (r#type as u32).to_string()),
+            ("type", r#type.to_string()),
             ("oid", oid.to_string()),
             ("rpid", rpid.to_string()),
             ("reason", (reason as u32).to_string()),
