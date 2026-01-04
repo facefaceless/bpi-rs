@@ -22,7 +22,7 @@ pub enum ReportReason {
     Other = 0,
     /// 垃圾广告
     Ad = 1,
-    /// 色情低俗
+    /// 色情低俗（色情）
     Porn = 2,
     /// 刷屏
     Spam = 3,
@@ -33,7 +33,7 @@ pub enum ReportReason {
     Politics = 6,
     /// 人身攻击
     Abuse = 7,
-    /// 视频不相关
+    /// 视频不相关（无关内容刷屏）
     Irrelevant = 8,
     /// 违法违规（涉政敏感）
     Illegal = 9,
@@ -50,6 +50,8 @@ pub enum ReportReason {
     HarmfulToYouth = 17,
     /// 虚假不实信息（传播谣言）
     FalseInfo = 22,
+    /// 违规广告引流（违法信息外链）
+    IllegalExternalLink = 23,
 }
 
 /// 评论成功返回数据
