@@ -1,8 +1,8 @@
-use crate::{ BpiError };
+use crate::BpiError;
 use reqwest::RequestBuilder;
 use reqwest::cookie::CookieStore;
-use reqwest::{ Client, Url, cookie::Jar };
-use std::sync::{ Arc, Mutex };
+use reqwest::{Client, Url, cookie::Jar};
+use std::sync::{Arc, RwLock};
 use tracing;
 
 use super::auth::Account;
@@ -42,7 +42,7 @@ use super::request::BilibiliRequest;
 pub struct BpiClient {
     client: Client,
     jar: Arc<Jar>,
-    account: Mutex<Option<Account>>,
+    account: RwLock<Option<Account>>,
 }
 
 impl BpiClient {
@@ -65,7 +65,7 @@ impl BpiClient {
             let instance = Self {
                 client,
                 jar,
-                account: Mutex::new(None),
+                account: RwLock::new(None),
             };
 
             // 在 debug 模式下自动从account.toml加载测试账号
@@ -102,7 +102,7 @@ impl BpiClient {
         BpiClient {
             client,
             jar,
-            account: Mutex::new(None),
+            account: RwLock::new(None),
         }
     }
 
@@ -110,7 +110,7 @@ impl BpiClient {
     pub fn set_account(&self, account: Account) {
         if account.is_complete() {
             self.load_cookies_from_account(&account);
-            let mut acc = self.account.lock().unwrap();
+            let mut acc = self.account.write().unwrap();
             *acc = Some(account);
             tracing::info!("设置账号信息完成，使用[登录]模式");
         } else {
@@ -135,7 +135,7 @@ impl BpiClient {
 
     /// 清除账号信息
     pub fn clear_account(&self) {
-        let mut acc = self.account.lock().unwrap();
+        let mut acc = self.account.write().unwrap();
         *acc = None;
         self.clear_cookies();
         tracing::info!("清除账号信息完成");
@@ -195,12 +195,12 @@ impl BpiClient {
 
     /// 获取当前账号信息
     pub fn get_account(&self) -> Option<Account> {
-        self.account.lock().unwrap().clone()
+        self.account.read().unwrap().clone()
     }
 
     /// 从账号信息获取 CSRF token
     pub fn csrf(&self) -> Result<String, BpiError> {
-        let account = self.account.lock().unwrap();
+        let account = self.account.read().unwrap();
         account
             .as_ref()
             .filter(|acc| !acc.bili_jct.is_empty())
