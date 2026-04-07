@@ -216,6 +216,11 @@ impl BpiClient {
     pub fn post(&self, url: &str) -> RequestBuilder {
         self.client.post(url).with_user_agent()
     }
+
+    /// reqwest的post请求包装
+    pub fn naive_post(&self, url: &str) -> RequestBuilder {
+        self.client.post(url)
+    }
 }
 
 impl BpiClient {
